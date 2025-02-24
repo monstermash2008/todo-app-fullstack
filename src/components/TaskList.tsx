@@ -1,5 +1,9 @@
 import { useState } from "react";
 import { Task } from "../types";
+import { Label } from "./ui/label";
+import { Input } from "./ui/input";
+import { Button } from "./ui/button";
+import { Checkbox } from "./ui/checkbox";
 
 export default function TaskList({
   tasks,
@@ -13,7 +17,7 @@ export default function TaskList({
   return (
     <ul>
       {tasks.map((task) => (
-        <li key={task.id}>
+        <li className="mb-2" key={task.id}>
           <TaskComponent
             task={task}
             onChange={onChangeTask}
@@ -39,7 +43,7 @@ function TaskComponent({
   if (isEditing) {
     taskContent = (
       <>
-        <input
+        <Input
           value={task.text}
           onChange={(e) => {
             onChange({
@@ -48,31 +52,30 @@ function TaskComponent({
             });
           }}
         />
-        <button onClick={() => setIsEditing(false)}>Save</button>
+        <Button onClick={() => setIsEditing(false)}>Save</Button>
       </>
     );
   } else {
     taskContent = (
       <>
         {task.text}
-        <button onClick={() => setIsEditing(true)}>Edit</button>
+        <Button variant="secondary" onClick={() => setIsEditing(true)}>Edit</Button>
       </>
     );
   }
   return (
-    <label>
-      <input
-        type="checkbox"
+    <Label className="flex items-center gap-x-4">
+      <Checkbox
         checked={task.done}
-        onChange={(e) => {
+        onCheckedChange={(checked) => {
           onChange({
             ...task,
-            done: e.target.checked,
+            done: checked === true,
           });
         }}
       />
       {taskContent}
-      <button onClick={() => onDelete(task.id)}>Delete</button>
-    </label>
+      <Button variant="destructive" onClick={() => onDelete(task.id)}>Delete</Button>
+    </Label>
   );
 }

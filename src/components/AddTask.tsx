@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { Input } from "./ui/input";
+import { Button } from "./ui/button";
 
 export default function AddTask({
   onAddTask,
@@ -7,20 +9,22 @@ export default function AddTask({
 }) {
   const [text, setText] = useState("");
   return (
-    <>
-      <input
+    <div className="flex gap-2">
+      <Input
+        className="mb-2"
         placeholder="Add task"
         value={text}
         onChange={(e) => setText(e.target.value)}
       />
-      <button
+      <Button
+      className="min-w-40"
         onClick={() => {
           setText("");
           onAddTask(text);
         }}
       >
         Add
-      </button>
-    </>
+      </Button>
+    </div>
   );
 }

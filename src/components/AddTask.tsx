@@ -1,29 +1,36 @@
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
-import * as z from "zod"
-import { Button } from "./ui/button"
-import { Form, FormControl, FormField, FormItem } from "./ui/form"
-import { Input } from "./ui/input"
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import * as z from "zod";
+import { Button } from "./ui/button";
+import { Form, FormControl, FormField, FormItem } from "./ui/form";
+import { Input } from "./ui/input";
+import { TasksDispatchContext } from "@/contexts/TasksContext";
+import { useContext } from "react";
+
+let nextId = 3;
 
 const formSchema = z.object({
   task: z.string().min(1, "Task cannot be empty"),
-})
+});
 
-export default function AddTask({
-  onAddTask,
-}: {
-  onAddTask: (text: string) => void;
-}) {
+export default function AddTask() {
+  const dispatch = useContext(TasksDispatchContext);
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       task: "",
     },
-  })
+  });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    onAddTask(values.task)
-    form.reset()
+    // onAddTask(values.task);
+    dispatch({
+      type: "added",
+      id: nextId++,
+      text: values.task,
+    });
+    form.reset();
   }
 
   return (
@@ -40,8 +47,8 @@ export default function AddTask({
             </FormItem>
           )}
         />
-        <Button 
-          className="min-w-40" 
+        <Button
+          className="min-w-40"
           type="submit"
           disabled={!form.formState.isValid}
         >
@@ -49,5 +56,5 @@ export default function AddTask({
         </Button>
       </form>
     </Form>
-  )
+  );
 }

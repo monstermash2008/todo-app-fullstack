@@ -1,44 +1,29 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Task } from "../types";
 import { Label } from "./ui/label";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { Checkbox } from "./ui/checkbox";
+import { TasksContext, TasksDispatchContext } from "@/contexts/TasksContext";
 
-export default function TaskList({
-  tasks,
-  onChangeTask,
-  onDeleteTask,
-}: {
-  tasks: Task[];
-  onChangeTask: (task: Task) => void;
-  onDeleteTask: (taskId: number) => void;
-}) {
+export default function TaskList() {
+  const tasks = useContext(TasksContext);
+
   return (
     <ul>
       {tasks.map((task) => (
         <li className="mb-2" key={task.id}>
-          <TaskComponent
-            task={task}
-            onChange={onChangeTask}
-            onDelete={onDeleteTask}
-          />
+          <TaskComponent task={task} />
         </li>
       ))}
     </ul>
   );
 }
 
-function TaskComponent({
-  task,
-  onChange,
-  onDelete,
-}: {
-  task: Task;
-  onChange: (task: Task) => void;
-  onDelete: (taskId: number) => void;
-}) {
+function TaskComponent({ task }: { task: Task }) {
   const [isEditing, setIsEditing] = useState(false);
+  const dispatch = useContext(TasksDispatchContext);
+
   let taskContent;
   if (isEditing) {
     taskContent = (
@@ -46,9 +31,9 @@ function TaskComponent({
         <Input
           value={task.text}
           onChange={(e) => {
-            onChange({
-              ...task,
-              text: e.target.value,
+            dispatch({
+              type: "changed",
+              task: { ...task, text: e.target.value },
             });
           }}
         />
@@ -59,7 +44,9 @@ function TaskComponent({
     taskContent = (
       <>
         {task.text}
-        <Button variant="secondary" onClick={() => setIsEditing(true)}>Edit</Button>
+        <Button variant="secondary" onClick={() => setIsEditing(true)}>
+          Edit
+        </Button>
       </>
     );
   }
@@ -68,14 +55,24 @@ function TaskComponent({
       <Checkbox
         checked={task.done}
         onCheckedChange={(checked) => {
-          onChange({
-            ...task,
-            done: checked === true,
+          dispatch({
+            type: "changed",
+            task: { ...task, done: checked === true },
           });
         }}
       />
       {taskContent}
-      <Button variant="destructive" onClick={() => onDelete(task.id)}>Delete</Button>
+      <Button
+        variant="destructive"
+        onClick={() => {
+          dispatch({
+            type: "deleted",
+            id: task.id,
+          });
+        }}
+      >
+        Delete
+      </Button>
     </Label>
   );
 }

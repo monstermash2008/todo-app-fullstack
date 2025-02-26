@@ -1,19 +1,22 @@
 {
   "name": "todo-app-fullstack",
-  "module": "index.ts",
   "type": "module",
   "private": true,
+  "module": "index.ts",
   "scripts": {
     "start": "bun index.ts",
     "dev": "bun --watch index.ts"
-  },
-  "devDependencies": {
-    "@types/bun": "latest"
   },
   "peerDependencies": {
     "typescript": "^5"
   },
   "dependencies": {
     "hono": "^4.7.2"
+  },
+  "devDependencies": {
+    "@antfu/eslint-config": "^4.3.0",
+    "@types/bun": "latest",
+    "eslint": "^9.20.1",
+    "eslint-plugin-format": "^1.0.1"
   }
 }

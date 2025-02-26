@@ -1,6 +1,6 @@
-import AddTask from "./components/AddTask";
-import TaskList from "./components/TaskList";
-import { TasksProvider } from "./contexts/TasksProvider";
+import AddTask from './components/AddTask'
+import TaskList from './components/TaskList'
+import { TasksProvider } from './contexts/TasksProvider'
 
 function App() {
   return (
@@ -11,7 +11,7 @@ function App() {
         <TaskList />
       </div>
     </TasksProvider>
-  );
+  )
 }
 
-export default App;
+export default App

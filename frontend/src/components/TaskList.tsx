@@ -1,30 +1,30 @@
-import { useState } from "react";
-import { Task } from "../types";
-import { Label } from "./ui/label";
-import { Input } from "./ui/input";
-import { Button } from "./ui/button";
-import { Checkbox } from "./ui/checkbox";
-import { useTasks, useTasksDispatch } from "@/contexts/tasksContexts";
+import type { Task } from '../types'
+import { useTasks, useTasksDispatch } from '@/contexts/tasksContexts'
+import { useState } from 'react'
+import { Button } from './ui/button'
+import { Checkbox } from './ui/checkbox'
+import { Input } from './ui/input'
+import { Label } from './ui/label'
 
 export default function TaskList() {
-  const tasks = useTasks();
+  const tasks = useTasks()
 
   return (
     <ul>
-      {tasks.map((task) => (
+      {tasks.map(task => (
         <li className="mb-2" key={task.id}>
           <TaskComponent task={task} />
         </li>
       ))}
     </ul>
-  );
+  )
 }
 
 function TaskComponent({ task }: { task: Task }) {
-  const [isEditing, setIsEditing] = useState(false);
-  const dispatch = useTasksDispatch();
+  const [isEditing, setIsEditing] = useState(false)
+  const dispatch = useTasksDispatch()
 
-  let taskContent;
+  let taskContent
   if (isEditing) {
     taskContent = (
       <>
@@ -32,15 +32,16 @@ function TaskComponent({ task }: { task: Task }) {
           value={task.text}
           onChange={(e) => {
             dispatch({
-              type: "changed",
+              type: 'changed',
               task: { ...task, text: e.target.value },
-            });
+            })
           }}
         />
         <Button onClick={() => setIsEditing(false)}>Save</Button>
       </>
-    );
-  } else {
+    )
+  }
+  else {
     taskContent = (
       <>
         {task.text}
@@ -48,7 +49,7 @@ function TaskComponent({ task }: { task: Task }) {
           Edit
         </Button>
       </>
-    );
+    )
   }
   return (
     <Label className="flex items-center gap-x-4">
@@ -56,9 +57,9 @@ function TaskComponent({ task }: { task: Task }) {
         checked={task.done}
         onCheckedChange={(checked) => {
           dispatch({
-            type: "changed",
+            type: 'changed',
             task: { ...task, done: checked === true },
-          });
+          })
         }}
       />
       {taskContent}
@@ -66,13 +67,13 @@ function TaskComponent({ task }: { task: Task }) {
         variant="destructive"
         onClick={() => {
           dispatch({
-            type: "deleted",
+            type: 'deleted',
             id: task.id,
-          });
+          })
         }}
       >
         Delete
       </Button>
     </Label>
-  );
+  )
 }

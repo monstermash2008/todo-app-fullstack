@@ -4,8 +4,7 @@ import * as z from "zod";
 import { Button } from "./ui/button";
 import { Form, FormControl, FormField, FormItem } from "./ui/form";
 import { Input } from "./ui/input";
-import { TasksDispatchContext } from "@/contexts/TasksContext";
-import { useContext } from "react";
+import { useTasksDispatch } from "@/contexts/tasksContexts";
 
 let nextId = 3;
 
@@ -14,7 +13,7 @@ const formSchema = z.object({
 });
 
 export default function AddTask() {
-  const dispatch = useContext(TasksDispatchContext);
+  const dispatch = useTasksDispatch();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -24,7 +23,6 @@ export default function AddTask() {
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    // onAddTask(values.task);
     dispatch({
       type: "added",
       id: nextId++,

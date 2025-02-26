@@ -1,13 +1,13 @@
-import { useContext, useState } from "react";
+import { useState } from "react";
 import { Task } from "../types";
 import { Label } from "./ui/label";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { Checkbox } from "./ui/checkbox";
-import { TasksContext, TasksDispatchContext } from "@/contexts/TasksContext";
+import { useTasks, useTasksDispatch } from "@/contexts/tasksContexts";
 
 export default function TaskList() {
-  const tasks = useContext(TasksContext);
+  const tasks = useTasks();
 
   return (
     <ul>
@@ -22,7 +22,7 @@ export default function TaskList() {
 
 function TaskComponent({ task }: { task: Task }) {
   const [isEditing, setIsEditing] = useState(false);
-  const dispatch = useContext(TasksDispatchContext);
+  const dispatch = useTasksDispatch();
 
   let taskContent;
   if (isEditing) {

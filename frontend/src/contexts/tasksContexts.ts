@@ -4,7 +4,7 @@ import { createContext, useContext } from 'react'
 
 export const TasksContext = createContext<Task[]>([])
 export const TasksDispatchContext = createContext<
-  React.ActionDispatch<[action: TaskAction]>
+  React.Dispatch<TaskAction>
 >(() => {
   throw new Error('TasksDispatchContext not provided')
 })

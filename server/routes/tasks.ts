@@ -40,7 +40,27 @@ export const tasksRoute = new Hono()
     fakeTasks.push({ ...task, id: fakeTasks.length + 1 })
     return c.json(task)
   })
-  .delete('/:id', describeRoute({
+  .put('/:id{[0-9]+}', zValidator('json', createTaskSchema), describeRoute({
+    description: 'Update a task',
+    responses: {
+      200: {
+        description: 'Successful response',
+        content: {
+          'application/json': { schema: resolver(createTaskSchema) },
+        },
+      },
+    },
+  }), async (c) => {
+    const id = Number.parseInt(c.req.param('id'))
+    const task = await c.req.valid('json')
+    const oldTask = fakeTasks.find(t => t.id === id)
+    if (!oldTask) {
+      return c.notFound()
+    }
+    Object.assign(oldTask, task)
+    return c.json(task)
+  })
+  .delete('/:id{[0-9]+}', describeRoute({
     description: 'Delete a task',
     responses: {
       200: {

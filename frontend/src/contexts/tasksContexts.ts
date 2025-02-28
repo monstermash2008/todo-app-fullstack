@@ -1,4 +1,4 @@
-import type { Task } from '@/types'
+import type { Task } from '../../../shared/schema'
 import type { TaskAction } from './tasksReducer'
 import { createContext, useContext } from 'react'
 

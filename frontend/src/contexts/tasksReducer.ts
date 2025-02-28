@@ -1,15 +1,10 @@
-import type { Task } from '@/types'
-
-export const initialTasks: Task[] = [
-  { id: 0, text: 'Philosopher\'s Path', done: true },
-  { id: 1, text: 'Visit the temple', done: false },
-  { id: 2, text: 'Drink matcha', done: false },
-]
+import type { Task } from '../../../shared/schema'
 
 export type TaskAction =
   | { type: 'added', id: number, text: string }
   | { type: 'changed', task: Task }
   | { type: 'deleted', id: number }
+  | { type: 'set', tasks: Task[] }
 
 export function tasksReducer(tasks: Task[], action: TaskAction) {
   switch (action.type) {
@@ -35,6 +30,9 @@ export function tasksReducer(tasks: Task[], action: TaskAction) {
     }
     case 'deleted': {
       return tasks.filter(t => t.id !== action.id)
+    }
+    case 'set': {
+      return action.tasks
     }
     default: {
       throw new Error('Unknown action')

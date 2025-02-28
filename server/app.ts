@@ -1,16 +1,13 @@
 import { apiReference } from '@scalar/hono-api-reference'
 import { Hono } from 'hono'
 import { openAPISpecs } from 'hono-openapi'
+import { serveStatic } from 'hono/bun'
 import { logger } from 'hono/logger'
 import { tasksRoute } from './routes/tasks'
 
 const app = new Hono()
 
 app.use('*', logger())
-
-app.get('/', (c) => {
-  return c.json({ message: 'Hello, World!' })
-})
 
 app.route('/api/tasks', tasksRoute)
 
@@ -37,5 +34,10 @@ app.get(
     spec: { url: '/openapi' },
   }),
 )
+
+// Frontend
+
+app.get('*', serveStatic({ root: './frontend/dist' }))
+app.get('*', serveStatic({ path: './frontend/dist/index.html' }))
 
 export default app

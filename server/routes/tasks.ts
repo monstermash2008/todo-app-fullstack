@@ -1,20 +1,15 @@
-import type { Task } from '../frontend/src/types'
+import type { Task } from '../../shared/schema'
 import { zValidator } from '@hono/zod-validator'
 import { Hono } from 'hono'
 import { describeRoute } from 'hono-openapi'
 import { resolver } from 'hono-openapi/zod'
-import { z } from 'zod'
+import { createTaskSchema } from '../../shared/schema'
 
 const fakeTasks: Task[] = [
   { id: 1, text: 'Task 1', done: false },
   { id: 2, text: 'Task 2', done: true },
   { id: 3, text: 'Task 3', done: false },
 ]
-
-const createTaskSchema = z.object({
-  text: z.string(),
-  done: z.boolean(),
-})
 
 export const tasksRoute = new Hono()
   .get('/', describeRoute({
@@ -43,5 +38,24 @@ export const tasksRoute = new Hono()
   }), async (c) => {
     const task = await c.req.valid('json')
     fakeTasks.push({ ...task, id: fakeTasks.length + 1 })
+    return c.json(task)
+  })
+  .delete('/:id', describeRoute({
+    description: 'Delete a task',
+    responses: {
+      200: {
+        description: 'Successful response',
+        content: {
+          'application/json': { schema: resolver(createTaskSchema) },
+        },
+      },
+    },
+  }), (c) => {
+    const id = Number.parseInt(c.req.param('id'))
+    const task = fakeTasks.find(t => t.id === id)
+    if (!task) {
+      return c.notFound()
+    }
+    fakeTasks.splice(fakeTasks.indexOf(task), 1)
     return c.json(task)
   })

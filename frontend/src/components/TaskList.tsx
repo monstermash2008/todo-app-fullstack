@@ -1,4 +1,4 @@
-import type { Task } from '../types'
+import type { Task } from '../../../shared/schema'
 import { useTasks, useTasksDispatch } from '@/contexts/tasksContexts'
 import { useState } from 'react'
 import { Button } from './ui/button'
